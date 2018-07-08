@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "159916465414",
+    "firebase_url": "https://ekta-safety.firebaseio.com",
+    "project_id": "ekta-safety",
+    "storage_bucket": "ekta-safety.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159916465414:android:87ff2f5975ae65f4",
+        "android_client_info": {
+          "package_name": "com.example.shreyanshjain.ekta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159916465414-6ffhc300qljtggre24vrlsdfaarsoktq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRFnZqwyqAN2Ag-dI-oTuNLGfzDCztYw0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
