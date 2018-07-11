@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.shreyanshjain.ekta.Models.LocationInfo;
+import com.example.shreyanshjain.ekta.models.LocationInfo;
 import com.example.shreyanshjain.ekta.app.Config;
 import com.example.shreyanshjain.ekta.utils.NotificationUtils;
 import com.firebase.ui.auth.AuthUI;
@@ -47,12 +47,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth.*;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -61,9 +63,14 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+
+import org.w3c.dom.DOMConfiguration;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -86,14 +93,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_stop_location_updates)
     Button btnStopUpdates;
 
-    @BindView(R.id.txt_reg_id)
-    TextView txtRegId;
-
     @BindView(R.id.txt_push_message)
     TextView txtMessage;
 
     // location last updated time
-    private String mLastUpdateTime;
+    private String mLastUpdateTime,mLastUpdateDate;
 
     // location updates interval - 10sec
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -151,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
                     // now subscribe to `global` topic to receive app wide notifications
                     FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
-                    displayFirebaseRegId();
-
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     // new push notification is received
 
@@ -164,23 +166,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        displayFirebaseRegId();
     }
 
     // Fetches reg id from shared preferences
     // and displays on the screen
-    private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
-
-        Log.e(TAG, "Firebase reg id: " + regId);
-
-        if (!TextUtils.isEmpty(regId)) {
-            txtRegId.setText("Firebase Reg Id: " + regId);
-        }else {
-            txtRegId.setText("Firebase Reg Id is not received yet!");
-        }
-    }
 
     private void init() {
         mAuth = FirebaseAuth.getInstance();
@@ -198,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 // location is received
                 mCurrentLocation = locationResult.getLastLocation();
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+                mLastUpdateDate = DateFormat.getDateInstance().format(new Date());
                 Toast.makeText(MainActivity.this, "" + mCurrentLocation.getTime(), Toast.LENGTH_SHORT).show();
                 updateLocationUI();
             }
@@ -242,9 +232,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
+            Double lat = mCurrentLocation.getLatitude();
+            Double lng = mCurrentLocation.getLongitude();
             txtLocationResult.setText(
-                    "Lat: " + mCurrentLocation.getLatitude() + ", " +
-                            "Lng: " + mCurrentLocation.getLongitude());
+                    "Lat: " + lat + ", " +
+                            "Lng: " + lng);
 
             firebaseData();
             // giving a blink animation on TextView
@@ -255,36 +247,19 @@ public class MainActivity extends AppCompatActivity {
             txtUpdatedOn.setText("Last updated on: " + mLastUpdateTime);
         }
 
-        /*mDatabaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                LocationInfo location = dataSnapshot.getValue(LocationInfo.class);
-                Log.i("Latitude",""+location.getLatitude());
-                Log.i("Time",""+location.getTime());
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-*/
         toggleButtons();
+    }
+
+    public String getCityFromCoordinates(Double lat, Double lng)
+    {
+        try {
+            GeoLocation geoLocation = new GeoLocation(lat,lng,MainActivity.this);
+            String city = geoLocation.getCity();
+            return city;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void firebaseAuth() {
@@ -310,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
     {
         AuthUI.getInstance().signOut(this);
     }
-        // Code to sign out the user
+    // Code to sign out the user
 //        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
 //            public void onComplete(@NonNull Task<Void> task) {
@@ -320,14 +295,27 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void firebaseData() {
+        Double lat = mCurrentLocation.getLatitude();
+        Double lng = mCurrentLocation.getLongitude();
         LocationInfo loc = new LocationInfo();
-        loc.setLatitude(mCurrentLocation.getLatitude());
-        loc.setLongitude(mCurrentLocation.getLongitude());
+        loc.setLatitude(lat);
+        loc.setLongitude(lng);
         loc.setTime(mLastUpdateTime);
-        mDatabaseReference.child("Location").setValue(loc,
-                                                        FirebaseAuth.getInstance()
-                                                                .getCurrentUser()
-                                                                .getDisplayName());
+        loc.setDate(mLastUpdateDate);
+//        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();;
+//        Log.i("Name",name);
+        mDatabaseReference.child(mAuth.getCurrentUser().getUid())
+                          .child("Location")
+                          .setValue(loc);
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        mDatabaseReference.child(mAuth.getCurrentUser().getUid())
+                          .child("Token_ID")
+                          .setValue(token);
+
+//        HashMap<String,String> token = new HashMap<>();
+//        token.put("Token ID", FirebaseInstanceId.getInstance().getToken());
+//        mDatabaseReference.child(mAuth.getCurrentUser().getUid()).setValue(token);
 
         attachDatabaseReadListener();
     }
@@ -337,7 +325,9 @@ public class MainActivity extends AppCompatActivity {
             mValueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    LocationInfo location = dataSnapshot.child("Location").getValue(LocationInfo.class);
+                    LocationInfo location = dataSnapshot.child(mAuth.getCurrentUser().getUid())
+                                                        .child("Location")
+                                                        .getValue(LocationInfo.class);
                     Log.i("Latitude", "" + location.getLatitude());
                     Log.i("Time", "" + location.getTime());
                 }
@@ -576,3 +566,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+
+
+
+        /*mDatabaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                LocationInfo location = dataSnapshot.getValue(LocationInfo.class);
+                Log.i("Latitude",""+location.getLatitude());
+                Log.i("Time",""+location.getTime());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+*/

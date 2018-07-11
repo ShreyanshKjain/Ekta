@@ -65,10 +65,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.e(TAG, "push json: " + json.toString());
 
         try {
-            JSONObject data = json.getJSONObject("data");
+            JSONObject data = json.getJSONObject("notification");     // data
 
             String title = data.getString("title");
-            String message = data.getString("message");
+            String message = data.getString("body");            //message
             boolean isBackground = data.getBoolean("is_background");
             String imageUrl = data.getString("image");
             String timestamp = data.getString("timestamp");

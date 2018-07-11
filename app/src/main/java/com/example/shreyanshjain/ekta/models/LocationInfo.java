@@ -1,10 +1,19 @@
-package com.example.shreyanshjain.ekta.Models;
+package com.example.shreyanshjain.ekta.models;
 
 public class LocationInfo {
 
     Double latitude;
     Double longitude;
     String time;
+    String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public Double getLatitude() {
         return latitude;
