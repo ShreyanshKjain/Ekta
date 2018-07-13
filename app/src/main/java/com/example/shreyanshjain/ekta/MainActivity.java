@@ -275,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
                             .setIsSmartLockEnabled(false)
                             .setAvailableProviders(providers)
                             .build(), RC_SIGN_IN);
+
                 }
             }
         };
@@ -289,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
 //        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
 //            public void onComplete(@NonNull Task<Void> task) {
-//                startActivity();   // Go back to sign in activity
+//                startActivity();   // Go back to sign in activity'
 //            }
 //        });
 
@@ -297,11 +298,8 @@ public class MainActivity extends AppCompatActivity {
     public void firebaseData() {
         Double lat = mCurrentLocation.getLatitude();
         Double lng = mCurrentLocation.getLongitude();
-        LocationInfo loc = new LocationInfo();
-        loc.setLatitude(lat);
-        loc.setLongitude(lng);
-        loc.setTime(mLastUpdateTime);
-        loc.setDate(mLastUpdateDate);
+        LocationInfo loc = new LocationInfo(lat,lng);
+
 //        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();;
 //        Log.i("Name",name);
         mDatabaseReference.child(mAuth.getCurrentUser().getUid())

@@ -1,11 +1,21 @@
 package com.example.shreyanshjain.ekta.models;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class LocationInfo {
 
     Double latitude;
     Double longitude;
     String time;
     String date;
+
+    public LocationInfo(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+    }
 
     public String getDate() {
         return date;
