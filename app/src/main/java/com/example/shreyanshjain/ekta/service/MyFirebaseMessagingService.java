@@ -15,6 +15,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Scanner;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
@@ -128,4 +130,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
     }
+
 }

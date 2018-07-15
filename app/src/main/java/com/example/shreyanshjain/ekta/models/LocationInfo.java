@@ -7,22 +7,29 @@ public class LocationInfo {
 
     Double latitude;
     Double longitude;
-    String time;
-    String date;
+    long dateTime;
+
+    public LocationInfo() {
+    }
 
     public LocationInfo(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+        dateTime = calendar.getTimeInMillis();
+
+//        SimpleDateFormat simpledateformat = new SimpleDateFormat("dd-MM-yyyy");
+//        date = simpledateformat.format(calendar.getTime());
+//        SimpleDateFormat simpleTimeformat = new SimpleDateFormat("HH:mm:ss");
+//        time = simpleTimeformat.format(calendar.getTime());
     }
 
-    public String getDate() {
-        return date;
+    public long getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDateTime(long dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Double getLatitude() {
@@ -41,11 +48,4 @@ public class LocationInfo {
         this.longitude = longitude;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 }

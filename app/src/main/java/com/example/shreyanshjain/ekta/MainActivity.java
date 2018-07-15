@@ -28,8 +28,10 @@ import android.widget.Toast;
 
 import com.example.shreyanshjain.ekta.models.LocationInfo;
 import com.example.shreyanshjain.ekta.app.Config;
+import com.example.shreyanshjain.ekta.models.Users;
 import com.example.shreyanshjain.ekta.utils.NotificationUtils;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.data.model.User;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -68,7 +70,9 @@ import org.w3c.dom.DOMConfiguration;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -232,11 +236,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
-            Double lat = mCurrentLocation.getLatitude();
-            Double lng = mCurrentLocation.getLongitude();
             txtLocationResult.setText(
-                    "Lat: " + lat + ", " +
-                            "Lng: " + lng);
+                    "Lat: " + mCurrentLocation.getLatitude() + ", " +
+                            "Lng: " + mCurrentLocation.getLongitude());
 
             firebaseData();
             // giving a blink animation on TextView
@@ -248,18 +250,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         toggleButtons();
-    }
-
-    public String getCityFromCoordinates(Double lat, Double lng)
-    {
-        try {
-            GeoLocation geoLocation = new GeoLocation(lat,lng,MainActivity.this);
-            String city = geoLocation.getCity();
-            return city;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void firebaseAuth() {
@@ -296,20 +286,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void firebaseData() {
-        Double lat = mCurrentLocation.getLatitude();
-        Double lng = mCurrentLocation.getLongitude();
-        LocationInfo loc = new LocationInfo(lat,lng);
 
-//        String name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();;
-//        Log.i("Name",name);
-        mDatabaseReference.child(mAuth.getCurrentUser().getUid())
-                          .child("Location")
-                          .setValue(loc);
-
+        LocationInfo loc = new LocationInfo(mCurrentLocation.getLatitude()
+                                                ,mCurrentLocation.getLongitude());
         String token = FirebaseInstanceId.getInstance().getToken();
-        mDatabaseReference.child(mAuth.getCurrentUser().getUid())
-                          .child("Token_ID")
-                          .setValue(token);
+        String uid = mAuth.getCurrentUser().getUid();
+        Users user = new Users(uid,loc,token,true);
+
+        mDatabaseReference.child("Users")
+                            .child(mAuth.getCurrentUser().getUid())
+                            .setValue(user);
 
 //        HashMap<String,String> token = new HashMap<>();
 //        token.put("Token ID", FirebaseInstanceId.getInstance().getToken());
@@ -323,11 +309,15 @@ public class MainActivity extends AppCompatActivity {
             mValueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    LocationInfo location = dataSnapshot.child(mAuth.getCurrentUser().getUid())
-                                                        .child("Location")
-                                                        .getValue(LocationInfo.class);
-                    Log.i("Latitude", "" + location.getLatitude());
-                    Log.i("Time", "" + location.getTime());
+                    Users users = dataSnapshot.child("Users")
+                                                .child(mAuth.getCurrentUser().getUid())
+                                                .getValue(Users.class);
+                    Log.i("Latitude", "" + users.getLocation().getLatitude());
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(users.getLocation().getDateTime());
+
+                    Log.i("Date and Time", "" + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(calendar.getTime()));
                 }
 
                 @Override
@@ -448,6 +438,10 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_stop_location_updates)
     public void stopLocationButtonClick() {
         mRequestingLocationUpdates = false;
+        mDatabaseReference.child("Users")
+                            .child(mAuth.getCurrentUser().getUid())
+                            .child("flag")
+                            .setValue(false);
         stopLocationUpdates();
     }
 
