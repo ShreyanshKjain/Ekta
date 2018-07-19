@@ -7,7 +7,7 @@ public class LocationInfo {
 
     Double latitude;
     Double longitude;
-    long dateTime;
+    long timestamp;
 
     public LocationInfo() {
     }
@@ -16,7 +16,7 @@ public class LocationInfo {
         this.latitude = latitude;
         this.longitude = longitude;
         Calendar calendar = Calendar.getInstance();
-        dateTime = calendar.getTimeInMillis();
+        timestamp = calendar.getTimeInMillis();
 
 //        SimpleDateFormat simpledateformat = new SimpleDateFormat("dd-MM-yyyy");
 //        date = simpledateformat.format(calendar.getTime());
@@ -24,12 +24,12 @@ public class LocationInfo {
 //        time = simpleTimeformat.format(calendar.getTime());
     }
 
-    public long getDateTime() {
-        return dateTime;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setDateTime(long dateTime) {
-        this.dateTime = dateTime;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Double getLatitude() {

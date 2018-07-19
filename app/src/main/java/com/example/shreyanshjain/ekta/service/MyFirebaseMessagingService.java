@@ -2,15 +2,18 @@ package com.example.shreyanshjain.ekta.service;
 
 import com.example.shreyanshjain.ekta.MainActivity;
 import com.example.shreyanshjain.ekta.app.Config;
+import com.example.shreyanshjain.ekta.models.NotificationModel;
 import com.example.shreyanshjain.ekta.utils.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,25 +72,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         try {
             JSONObject data = json.getJSONObject("notification");     // data
 
-            String title = data.getString("title");
-            String message = data.getString("body");            //message
-            boolean isBackground = data.getBoolean("is_background");
-            String imageUrl = data.getString("image");
-            String timestamp = data.getString("timestamp");
-            JSONObject payload = data.getJSONObject("payload");
+            NotificationModel notificationModel = new Gson().fromJson(data.toString(),NotificationModel.class);
+//            String notificationModel.getTitle() = data.getString("notificationModel.getTitle()");
+//            String message = data.getString("body");            //message
+//            boolean isBackground = data.getBoolean("is_background");
+//            String imageUrl = data.getString("image");
+//            String timestamp = data.getString("timestamp");
+//            JSONObject payload = data.getJSONObject("payload");
 
-            Log.e(TAG, "title: " + title);
-            Log.e(TAG, "message: " + message);
-            Log.e(TAG, "isBackground: " + isBackground);
-            Log.e(TAG, "payload: " + payload.toString());
-            Log.e(TAG, "imageUrl: " + imageUrl);
-            Log.e(TAG, "timestamp: " + timestamp);
+            Log.e(TAG, "title: " + notificationModel.getTitle());
+            Log.e(TAG, "message: " + notificationModel.getBody());
+//            Log.e(TAG, "isBackground: " + isBackground);
+//            Log.e(TAG, "payload: " + payload.toString());
+            Log.e(TAG, "imageUrl: " + notificationModel.getImage());
+            Log.e(TAG, "timestamp: " + notificationModel.getTimeStamp());
 
 
             if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("message", notificationModel.getBody());
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -96,14 +100,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {
                 // app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("message", notificationModel.getBody());
 
                 // check for image attachment
-                if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                if (TextUtils.isEmpty(notificationModel.getImage())) {
+                    showNotificationMessage(getApplicationContext()
+                                            , notificationModel.getTitle()
+                                            , notificationModel.getBody()
+                                            , notificationModel.getTimeStamp()
+                                            , resultIntent);
                 } else {
                     // image is present, show notification with image
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                    showNotificationMessageWithBigImage(getApplicationContext()
+                                                        , notificationModel.getTitle()
+                                                        , notificationModel.getBody()
+                                                        , notificationModel.getTimeStamp()
+                                                        , resultIntent
+                                                        , notificationModel.getImage());
                 }
             }
         } catch (JSONException e) {
@@ -130,5 +143,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
     }
-
 }

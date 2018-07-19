@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Latitude", "" + users.getLocation().getLatitude());
 
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(users.getLocation().getDateTime());
+                    calendar.setTimeInMillis(users.getLocation().getTimestamp());
 
                     Log.i("Date and Time", "" + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(calendar.getTime()));
                 }
@@ -367,15 +367,17 @@ public class MainActivity extends AppCompatActivity {
                     @SuppressLint("MissingPermission")
                     @Override
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                        Log.i(TAG, "All location settings are satisfied.");
+                        if(btnStartUpdates.isEnabled()) {
+                            Log.i(TAG, "All location settings are satisfied.");
 
-                        Toast.makeText(getApplicationContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
 
-                        //noinspection MissingPermission
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                                mLocationCallback, Looper.myLooper());
+                            //noinspection MissingPermission
+                            mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                                    mLocationCallback, Looper.myLooper());
 
-                        updateLocationUI();
+                            updateLocationUI();
+                        }
                     }
                 })
                 .addOnFailureListener(this, new OnFailureListener() {
@@ -521,8 +523,6 @@ public class MainActivity extends AppCompatActivity {
             startLocationUpdates();
         }
         mAuth.addAuthStateListener(mAuthStateListener);
-
-        updateLocationUI();
 
         // register GCM registration complete receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
