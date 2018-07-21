@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.MainPageFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fragment_bg"
+        android:layout_margin="15dp">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
+
+            <Button
+                android:id="@+id/btn_start_location_updates"
+                android:elevation="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp"
+                android:text="START"
+                android:background="?android:selectableItemBackground" />
+
+            <Button
+                android:id="@+id/btn_stop_location_updates"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp"
+                android:enabled="false"
+                android:focusable="false"
+                android:text="stop"
+                android:background="?android:selectableItemBackground"
+                android:alpha="0.5"/>
+
+            <TextView
+                android:id="@+id/location_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#333"
+                android:textSize="18sp"
+                android:textAlignment="viewStart"/>
+
+            <TextView
+                android:id="@+id/updated_on"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/txt_push_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorPrimary"
+                android:textSize="26dp" />
+
+            <Button
+                android:id="@+id/btn_sign_out"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/buttonText"
+                android:textSize="20sp"
+                android:layout_marginTop="150dp"
+                android:text="Sign out"
+                android:background="?android:selectableItemBackground" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

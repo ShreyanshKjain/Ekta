@@ -19,6 +19,9 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.shreyanshjain.ekta.R;
 import com.example.shreyanshjain.ekta.app.Config;
 
@@ -30,6 +33,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class NotificationUtils {
 
@@ -63,8 +67,7 @@ public class NotificationUtils {
                         PendingIntent.FLAG_CANCEL_CURRENT
                 );
 
-        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                mContext);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext,mContext.getString(R.string.default_notification_channel_id));
 
         final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + mContext.getPackageName() + "/raw/notification");
@@ -138,17 +141,18 @@ public class NotificationUtils {
      */
     public Bitmap getBitmapFromURL(String strURL) {
         try {
-            URL url = new URL(strURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
+            return Glide.with(mContext)
+                    .load(strURL)
+                    .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(100,100)
+                    .get();
+        } catch (InterruptedException e) {
             e.printStackTrace();
-            return null;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     // Playing notification sound

@@ -7,6 +7,7 @@ import com.example.shreyanshjain.ekta.utils.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -19,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Scanner;
+
+import retrofit2.http.Url;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
@@ -62,6 +65,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
             notificationUtils.playNotificationSound();
         }else{
+
+            // Code to intent the location to the Google maps
+            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
+
+            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);
+            pushNotificiation.setPackage("com.google.android.apps.maps");
             // If the app is in background, firebase itself handles the notification
         }
     }
