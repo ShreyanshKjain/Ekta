@@ -1,27 +1,21 @@
 package com.example.shreyanshjain.ekta.service;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.example.shreyanshjain.ekta.MainActivity;
 import com.example.shreyanshjain.ekta.app.Config;
 import com.example.shreyanshjain.ekta.models.NotificationModel;
 import com.example.shreyanshjain.ekta.utils.NotificationUtils;
 import com.google.firebase.messaging.FirebaseMessagingService;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Scanner;
-
-import retrofit2.http.Url;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
@@ -66,12 +60,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationUtils.playNotificationSound();
         }else{
 
-            // Code to intent the location to the Google maps
-            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
-
-            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);
-            pushNotificiation.setPackage("com.google.android.apps.maps");
-            // If the app is in background, firebase itself handles the notification
+            Log.e(TAG,message);
+//            // Code to intent the location to the Google maps
+//            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
+//
+//            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);
+//            pushNotificiation.setPackage("com.google.android.apps.maps");
+//            // If the app is in background, firebase itself handles the notification
         }
     }
 
@@ -111,6 +106,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 resultIntent.putExtra("message", notificationModel.getBody());
 
+                //            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
+//
+//            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);
+//            pushNotificiation.setPackage("com.google.android.apps.maps");
+
+                /* TODO: Intent the notification to the Google Maps, So that they can directly display the distance from the destination
+                    TODO: Add 2 buttons in the notification, one to confirm their presence or to choose another option that they can't reach there on time
+                 */
                 // check for image attachment
                 if (TextUtils.isEmpty(notificationModel.getImage())) {
                     showNotificationMessage(getApplicationContext()

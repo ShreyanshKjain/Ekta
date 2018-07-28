@@ -1,11 +1,14 @@
 package com.example.shreyanshjain.ekta.models;
 
-import java.text.SimpleDateFormat;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Calendar;
 
 public class LocationInfo {
 
+    @SerializedName("latitude")
     Double latitude;
+    @SerializedName("longitude")
     Double longitude;
     long timestamp;
 

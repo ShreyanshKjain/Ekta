@@ -1,9 +1,8 @@
 package com.example.shreyanshjain.ekta;
 
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.shreyanshjain.ekta.adapters.PagerViewAdapter;
@@ -43,13 +42,15 @@ public class Main2Activity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+
                 changeTabs(position);
-            }
+
+               }
 
             @Override
             public void onPageScrollStateChanged(int state) {
 
-            }
+                }
         });
     }
 
