@@ -3,12 +3,14 @@ package com.example.shreyanshjain.ekta.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shreyanshjain.ekta.R;
+import com.example.shreyanshjain.ekta.adapters.NotificationAdapter;
 import com.example.shreyanshjain.ekta.models.NotificationList;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -18,15 +20,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class NotificationsFragment extends android.support.v4.app.Fragment {
 
-    @BindView(R.id.notify_recycler_view)
-    RecyclerView notifyRecycler;
+//    @BindView(R.id.notify_recycler_view)
+    RecyclerView recyclerView;
 
     DatabaseReference mDatabaseReference;
 
@@ -34,6 +35,8 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
     ArrayList<NotificationList> notificationList;
     FirebaseAuth mAuth;
+    HashMap<String, Object> notification;
+    NotificationList object;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -45,27 +48,26 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-        ButterKnife.bind(view);
+//        ButterKnife.bind(view);
 
+        recyclerView = view.findViewById(R.id.notify_recycler_view);
         mAuth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 //        mDatabaseReference.child("Notification").child("flag").setValue("true");
 
-        /* TODO: Get a list of all the Notifications sent to a particular user by its user id
-         */
-
+        notificationList = new ArrayList<>();
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                DataSnapshot dataSnapshot1 = dataSnapshot.child("Notification").child(mAuth.getCurrentUser().getUid());
+//                DataSnapshot dataSnapshot1 = dataSnapshot.child("Notification").child(mAuth.getCurrentUser().getUid());
 
-                for(DataSnapshot data: dataSnapshot1.getChildren()){
-                    // TODO: Solve null pointer exception in notificationList.add()
-                    NotificationList notification = data.getValue(NotificationList.class);
-                    notificationList.add(notification);
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for(DataSnapshot data: children){
+                    NotificationList notifi = data.getValue(NotificationList.class);
+                    notificationList.add(notifi);
                 }
-
+                setAdapter(notificationList);
             }
 
             @Override
@@ -73,9 +75,18 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
             }
         };
-        mDatabaseReference.addValueEventListener(mValueEventListener);
+        mDatabaseReference.child("Notification").child(mAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
+
 
         return view;
     }
 
+    void setAdapter(ArrayList<NotificationList> notificationList)
+    {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        NotificationAdapter adapter = new NotificationAdapter(getContext(),notificationList);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 }

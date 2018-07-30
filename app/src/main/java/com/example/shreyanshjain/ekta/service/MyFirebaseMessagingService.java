@@ -106,6 +106,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
                 resultIntent.putExtra("message", notificationModel.getBody());
 
+//                String body =  notificationModel.getBody();
+//                String lat = body.substring(11,)
                 //            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
 //
 //            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);

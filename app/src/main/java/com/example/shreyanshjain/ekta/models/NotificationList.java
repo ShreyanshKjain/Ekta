@@ -1,38 +1,31 @@
 package com.example.shreyanshjain.ekta.models;
 
-import com.google.gson.annotations.SerializedName;
-
 public class NotificationList {
-    @SerializedName("location")
-    LocationInfo locationInfo;
-
-    @SerializedName("from")
+    LocationInfo location;
     String from;
+    String token_id;
 
-    @SerializedName("token_id")
-    String token;
+    public LocationInfo getLocation() {
+        return location;
+    }
 
-    public LocationInfo getLocationInfo() {
-        return locationInfo;
+    public void setLocation(LocationInfo location) {
+        this.location = location;
     }
 
     public String getFrom() {
         return from;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setLocationInfo(LocationInfo locationInfo) {
-        this.locationInfo = locationInfo;
-    }
-
     public void setFrom(String from) {
         this.from = from;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getToken_id() {
+        return token_id;
+    }
+
+    public void setToken_id(String token_id) {
+        this.token_id = token_id;
     }
 }
