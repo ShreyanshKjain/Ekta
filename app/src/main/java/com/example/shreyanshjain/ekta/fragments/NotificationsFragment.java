@@ -20,8 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 
 
 public class NotificationsFragment extends android.support.v4.app.Fragment {
@@ -35,8 +33,6 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
     ArrayList<NotificationList> notificationList;
     FirebaseAuth mAuth;
-    HashMap<String, Object> notification;
-    NotificationList object;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -64,8 +60,8 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for(DataSnapshot data: children){
-                    NotificationList notifi = data.getValue(NotificationList.class);
-                    notificationList.add(notifi);
+                    NotificationList notification = data.getValue(NotificationList.class);
+                    notificationList.add(notification);
                 }
                 setAdapter(notificationList);
             }

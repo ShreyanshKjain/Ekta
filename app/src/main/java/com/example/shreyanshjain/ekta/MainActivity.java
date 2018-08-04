@@ -154,9 +154,11 @@ public class MainActivity extends AppCompatActivity {
 
                     String message = intent.getStringExtra("message");
 
+                    String lat = message.substring(11,21);
+                    String lng = message.substring(37);
                     Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
 
-                    txtMessage.setText(message);
+                    txtMessage.setText("Lat:"+lat+ "\nLong:" + lng);
                 }
             }
         };
@@ -534,7 +536,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (mRequestingLocationUpdates) {
             // pausing location updates
-            stopLocationUpdates();
+            stopLocationButtonClick();
         }
 
         mAuth.removeAuthStateListener(mAuthStateListener);

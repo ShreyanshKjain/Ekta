@@ -107,11 +107,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultIntent.putExtra("message", notificationModel.getBody());
 
 //                String body =  notificationModel.getBody();
-//                String lat = body.substring(11,)
-                //            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
-//
-//            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);
-//            pushNotificiation.setPackage("com.google.android.apps.maps");
+//                String lat = body.substring(11,21);
+//                String lng = body.substring(37);
+//                Uri locationUri = Uri.parse("geo:" + lat + "," + lng);
+
+//                Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
+//                resultIntent.setPackage("com.google.android.apps.maps");
 
                 /* TODO: Intent the notification to the Google Maps, So that they can directly display the distance from the destination
                     TODO: Add 2 buttons in the notification, one to confirm their presence or to choose another option that they can't reach there on time
