@@ -3,7 +3,7 @@ package com.example.shreyanshjain.ekta.models;
 public class NotificationList {
     LocationInfo location;
     String from;
-    String token_id;
+    long timestamp;
 
     public LocationInfo getLocation() {
         return location;
@@ -21,11 +21,11 @@ public class NotificationList {
         this.from = from;
     }
 
-    public String getToken_id() {
-        return token_id;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setToken_id(String token_id) {
-        this.token_id = token_id;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

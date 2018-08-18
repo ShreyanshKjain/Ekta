@@ -55,14 +55,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             pushNotification.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
-            // play notification sound
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-        }else{
 
-            Log.e(TAG,message);
-//            // Code to intent the location to the Google maps
-//            Uri locationUri = Uri.parse("geo:*latitude*,*longitude*");
+//    @Override
+//    public void onMessageReceived(RemoteMessage remoteMessage) {
 //
 //            Intent pushNotificiation = new Intent(Intent.ACTION_VIEW,locationUri);
 //            pushNotificiation.setPackage("com.google.android.apps.maps");

@@ -11,7 +11,11 @@ import android.widget.TextView;
 import com.example.shreyanshjain.ekta.R;
 import com.example.shreyanshjain.ekta.models.NotificationList;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class NotificationAdapter extends RecyclerView.Adapter {
 
@@ -35,8 +39,17 @@ public class NotificationAdapter extends RecyclerView.Adapter {
 
         ((ViewHolder)holder).heading.setText(notificationList.get(position).getFrom());
         ((ViewHolder)holder).sub_heading.setText("Latitude: " + notificationList.get(position).getLocation().getLatitude() +
-                                                    "Longitude: " + notificationList.get(position).getLocation().getLongitude());
-        ((ViewHolder)holder).date_time.setText("date_time");
+                                                    "\nLongitude: " + notificationList.get(position).getLocation().getLongitude());
+
+        /*
+            TODO: Correct the time diplayed in the notifications
+         */
+        Date date = new Date(notificationList.get(position).getTimestamp());
+        DateFormat formatter = new SimpleDateFormat("dd/MM/YYYY hh:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String dateFormatted = formatter.format(date);
+        ((ViewHolder)holder).date_time.setText(dateFormatted);
+
     }
 
     @Override

@@ -469,7 +469,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         Log.e(TAG, "User agreed to make required location settings changes.");
-                        // Nothing to do. startLocationupdates() gets called in onResume again.
+                        // Nothing to do.
+                        // startLocationupdates() gets called in onResume again.
                         break;
                     case Activity.RESULT_CANCELED:
                         Log.e(TAG, "User chose not to make required location settings changes.");
