@@ -1,6 +1,7 @@
 package com.example.shreyanshjain.ekta;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -11,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class Main2Activity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity{
 
     @BindView(R.id.main_page)
     TextView mainText;
@@ -21,6 +22,9 @@ public class Main2Activity extends AppCompatActivity {
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     private PagerViewAdapter pagerViewAdapter;
 
@@ -34,23 +38,25 @@ public class Main2Activity extends AppCompatActivity {
 
         viewPager.setAdapter(pagerViewAdapter);
 
+        tabLayout.setupWithViewPager(viewPager);
+        /*
+            TODO: Create a service that can start the app by pressing power button thrice
+            TODO: Also add a feature of voice recognition in that service which can trigger the app while it receives a particular voice note
+         */
+//        tabLayout.addTab(tabLayout.newTab().);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-
                 changeTabs(position);
-
-               }
+            }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
-                }
+            }
         });
     }
 

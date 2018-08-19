@@ -109,7 +109,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
 //                resultIntent.setPackage("com.google.android.apps.maps");
 
-                /* TODO: Intent the notification to the Google Maps, So that they can directly display the distance from the destination
+                /*
+                    TODO: Intent the notification to the Google Maps, So that they can directly display the distance from the destination
                     TODO: Add 2 buttons in the notification, one to confirm their presence or to choose another option that they can't reach there on time
                  */
                 // check for image attachment

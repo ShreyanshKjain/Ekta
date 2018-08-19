@@ -14,7 +14,6 @@ import com.example.shreyanshjain.ekta.R;
 import com.example.shreyanshjain.ekta.adapters.NotificationAdapter;
 import com.example.shreyanshjain.ekta.models.NotificationList;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,43 +55,41 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
         notificationList = new ArrayList<>();
         notificationList.clear();
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        /*
+            TODO: Change the notification content when the user is changed
+            TODO: Save the notification in SQLite database for offline access
+            TODO: Add onClickListener() for every notification that will intent to Google Maps with received latitude and longitude passed in it
+         */
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 //        mDatabaseReference.child("Notification").child("flag").setValue("true");
 
-                    mValueEventListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        mValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 //                DataSnapshot dataSnapshot1 = dataSnapshot.child("Notification").child(mAuth.getCurrentUser().getUid());
-                            notificationList.clear();
-                            Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                            for (DataSnapshot data : children) {
-                                NotificationList notification = data.getValue(NotificationList.class);
-                                notificationList.add(notification);
-                            }
-                            setAdapter(notificationList);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    };
-                    mDatabaseReference.child("Notification").child(mAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
+//                notificationList.clear();
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot data : children) {
+                    NotificationList notification = data.getValue(NotificationList.class);
+                    notificationList.add(notification);
                 }
-                else
-                {
-                    recyclerView.setVisibility(View.GONE);
-                    noNotifications.setVisibility(View.VISIBLE);
-                }
+                setAdapter(notificationList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         };
-
+        mDatabaseReference.child("Notification").child(mAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
+//    }
+//                else
+//    {
+//        recyclerView.setVisibility(View.GONE);
+//        noNotifications.setVisibility(View.VISIBLE);
+//    }
         return view;
     }
 
