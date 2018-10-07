@@ -50,6 +50,9 @@
         </service>
         <!-- ./Firebase Notifications -->
 
+        <!--<service-->
+            <!--android:name=".service.OpenAppService"-->
+            <!--android:exported="false"/>-->
         <activity android:name=".MainActivity"></activity>
     </application>
 

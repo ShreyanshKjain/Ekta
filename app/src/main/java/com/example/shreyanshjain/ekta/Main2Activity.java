@@ -1,5 +1,6 @@
 package com.example.shreyanshjain.ekta;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.example.shreyanshjain.ekta.adapters.PagerViewAdapter;
+import com.example.shreyanshjain.ekta.service.OpenAppService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +36,7 @@ public class Main2Activity extends AppCompatActivity{
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
 
+        startService(new Intent(this, OpenAppService.class));
         pagerViewAdapter = new PagerViewAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(pagerViewAdapter);

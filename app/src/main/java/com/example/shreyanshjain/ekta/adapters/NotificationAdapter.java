@@ -42,7 +42,7 @@ public class NotificationAdapter extends RecyclerView.Adapter {
                                                     "\nLongitude: " + notificationList.get(position).getLocation().getLongitude());
 
         /*
-            TODO: Correct the time diplayed in the notifications
+            TODO: Correct the time displayed in the notifications
          */
         Date date = new Date(notificationList.get(position).getTimestamp());
         DateFormat formatter = new SimpleDateFormat("dd/MM/YYYY hh:mm:ss");

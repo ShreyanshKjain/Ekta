@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class NotificationsFragment extends android.support.v4.app.Fragment {
 
-//    @BindView(R.id.notify_recycler_view)
     RecyclerView recyclerView;
     TextView noNotifications;
     DatabaseReference mDatabaseReference;
@@ -53,9 +52,8 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         notificationList = new ArrayList<>();
-        notificationList.clear();
-
         /*
+            TODO: Display notification content
             TODO: Change the notification content when the user is changed
             TODO: Save the notification in SQLite database for offline access
             TODO: Add onClickListener() for every notification that will intent to Google Maps with received latitude and longitude passed in it
