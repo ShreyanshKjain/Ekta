@@ -59,7 +59,12 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
             TODO: Add onClickListener() for every notification that will intent to Google Maps with received latitude and longitude passed in it
          */
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        //mAuthStateListener.onAuthStateChanged(mAuth);
+
+
+        if(mAuth.getCurrentUser() != null)
+        {
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 //        mDatabaseReference.child("Notification").child("flag").setValue("true");
 
         mValueEventListener = new ValueEventListener() {
@@ -80,14 +85,17 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
+
         };
         mDatabaseReference.child("Notification").child(mAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
-//    }
-//                else
-//    {
-//        recyclerView.setVisibility(View.GONE);
-//        noNotifications.setVisibility(View.VISIBLE);
-//    }
+
+    }
+    else
+    {
+        recyclerView.setVisibility(View.GONE);
+        noNotifications.setVisibility(View.VISIBLE);
+    }
         return view;
     }
 

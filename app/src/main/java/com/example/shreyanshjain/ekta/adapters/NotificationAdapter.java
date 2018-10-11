@@ -45,7 +45,7 @@ public class NotificationAdapter extends RecyclerView.Adapter {
             TODO: Correct the time displayed in the notifications
          */
         Date date = new Date(notificationList.get(position).getTimestamp());
-        DateFormat formatter = new SimpleDateFormat("dd/MM/YYYY hh:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         String dateFormatted = formatter.format(date);
         ((ViewHolder)holder).date_time.setText(dateFormatted);
