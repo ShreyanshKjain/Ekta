@@ -104,10 +104,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                String body =  notificationModel.getBody();
 //                String lat = body.substring(11,21);
 //                String lng = body.substring(37);
-//                Uri locationUri = Uri.parse("geo:" + lat + "," + lng);
-
-//                Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
-//                resultIntent.setPackage("com.google.android.apps.maps");
 
                 /*
                     TODO: Intent the notification to the Google Maps, So that they can directly display the distance from the destination

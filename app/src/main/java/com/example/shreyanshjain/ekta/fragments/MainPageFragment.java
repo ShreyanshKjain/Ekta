@@ -181,11 +181,24 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
                     String message = intent.getStringExtra("message");
 
-                    String lat = message.substring(11,21);
-                    String lng = message.substring(37);
+                    final String lat = message.substring(11,21);
+                    final String lng = message.substring(37);
                     Toast.makeText(getContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
 
                     txtMessage.setText("Lat:"+lat+ "\nLong:" + lng);
+
+                    txtMessage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Uri locationUri = Uri.parse("geo:" + lat + "," + lng);
+
+                            Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
+                            resultIntent.setPackage("com.google.android.apps.maps");
+//                            if (resultIntent.resolveActivity(getPackageManager()) != null) {
+                                startActivity(resultIntent);
+//                            }
+                        }
+                    });
                 }
             }
         };
@@ -214,6 +227,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
                 mLastUpdateDate = DateFormat.getDateInstance().format(new Date());
                 Toast.makeText(getContext(), "" + mCurrentLocation.getTime(), Toast.LENGTH_SHORT).show();
+
                 updateLocationUI();
             }
         };

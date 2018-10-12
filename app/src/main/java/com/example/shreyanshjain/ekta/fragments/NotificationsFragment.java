@@ -33,7 +33,7 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
     ArrayList<NotificationList> notificationList;
     FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthStateListener;
+    //FirebaseAuth.AuthStateListener mAuthStateListener;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -59,12 +59,9 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
             TODO: Add onClickListener() for every notification that will intent to Google Maps with received latitude and longitude passed in it
          */
 
-        //mAuthStateListener.onAuthStateChanged(mAuth);
-
-
         if(mAuth.getCurrentUser() != null)
         {
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 //        mDatabaseReference.child("Notification").child("flag").setValue("true");
 
         mValueEventListener = new ValueEventListener() {
@@ -89,9 +86,8 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
         };
         mDatabaseReference.child("Notification").child(mAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
-
     }
-    else
+                else
     {
         recyclerView.setVisibility(View.GONE);
         noNotifications.setVisibility(View.VISIBLE);
