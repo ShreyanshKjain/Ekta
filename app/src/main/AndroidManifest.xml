@@ -54,6 +54,14 @@
             <!--android:name=".service.OpenAppService"-->
             <!--android:exported="false"/>-->
         <activity android:name=".MainActivity"></activity>
+
+        <!--<receiver android:name=".PowerButtonBroadcast">-->
+            <!--<intent-filter >-->
+                <!--<action android:name="android.intent.action.SCREEN_OFF"/>-->
+                <!--<action android:name="android.intent.action.SCREEN_ON"/>-->
+
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>

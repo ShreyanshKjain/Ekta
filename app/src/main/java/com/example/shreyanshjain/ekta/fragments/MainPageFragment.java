@@ -190,8 +190,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
                     txtMessage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Uri locationUri = Uri.parse("geo:" + lat + "," + lng);
-
+                            Uri locationUri = Uri.parse("google.navigation:q="+lat+","+lng);
                             Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
                             resultIntent.setPackage("com.google.android.apps.maps");
 //                            if (resultIntent.resolveActivity(getPackageManager()) != null) {

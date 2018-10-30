@@ -1,6 +1,8 @@
 package com.example.shreyanshjain.ekta;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -29,6 +31,7 @@ public class Main2Activity extends AppCompatActivity{
     TabLayout tabLayout;
 
     private PagerViewAdapter pagerViewAdapter;
+    BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,12 @@ public class Main2Activity extends AppCompatActivity{
             TODO: Also add a feature of voice recognition in that service which can trigger the app while it receives a particular voice note
          */
 //        tabLayout.addTab(tabLayout.newTab().);
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        mReceiver = new PowerButtonBroadcast();
+        registerReceiver(mReceiver, filter);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -92,6 +101,15 @@ public class Main2Activity extends AppCompatActivity{
             notificationText.setTextColor(getResources().getColor(R.color.textBright));
             notificationText.setTextSize(22);
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        if(mReceiver != null)
+        {
+            unregisterReceiver(mReceiver);
+            mReceiver = null;
+        }
+        super.onDestroy();
     }
 }
