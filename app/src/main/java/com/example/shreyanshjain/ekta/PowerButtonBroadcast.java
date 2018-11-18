@@ -10,6 +10,10 @@ public class PowerButtonBroadcast extends BroadcastReceiver {
 
     public static int count = 0;
 
+    /*
+        TODO: Add a background service
+     */
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -21,7 +25,7 @@ public class PowerButtonBroadcast extends BroadcastReceiver {
             if(count == 5)
             {
                 count = 0;
-                Toast.makeText(context, "MAIN ACTIVITY IS BEING CALLED", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "MAIN ACTIVITY IS BEING CALLED", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(context, Main2Activity.class);
 //                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(i);

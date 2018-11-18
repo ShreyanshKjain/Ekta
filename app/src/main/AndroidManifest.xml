@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +21,7 @@
         <activity android:name=".Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -32,10 +37,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
         <!-- Firebase Notifications -->
         <service android:name=".service.MyFirebaseMessagingService">
@@ -48,20 +52,25 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <service android:name=".service.RecorderService">
+
+        </service>
         <!-- ./Firebase Notifications -->
 
-        <!--<service-->
-            <!--android:name=".service.OpenAppService"-->
-            <!--android:exported="false"/>-->
-        <activity android:name=".MainActivity"></activity>
 
-        <!--<receiver android:name=".PowerButtonBroadcast">-->
-            <!--<intent-filter >-->
-                <!--<action android:name="android.intent.action.SCREEN_OFF"/>-->
-                <!--<action android:name="android.intent.action.SCREEN_ON"/>-->
+        <!-- <service -->
+        <!-- android:name=".service.OpenAppService" -->
+        <!-- android:exported="false"/> -->
+        <activity android:name=".MainActivity" />
 
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver android:name=".PowerButtonBroadcast">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

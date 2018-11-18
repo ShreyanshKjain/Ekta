@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "159916465414-22lb6vouijdk5i2ntbd6ih3rof0l9e81.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shreyanshjain.ekta",
+            "certificate_hash": "8b4086c87e1c60381e94f69a4aef585900c1c6c8"
+          }
+        },
+        {
           "client_id": "159916465414-6ffhc300qljtggre24vrlsdfaarsoktq.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159916465414-6ffhc300qljtggre24vrlsdfaarsoktq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

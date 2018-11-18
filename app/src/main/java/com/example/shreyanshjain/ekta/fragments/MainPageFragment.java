@@ -32,6 +32,7 @@ import com.example.shreyanshjain.ekta.R;
 import com.example.shreyanshjain.ekta.app.Config;
 import com.example.shreyanshjain.ekta.models.LocationInfo;
 import com.example.shreyanshjain.ekta.models.Users;
+import com.example.shreyanshjain.ekta.service.RecorderService;
 import com.example.shreyanshjain.ekta.utils.NotificationUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.api.ApiException;
@@ -448,6 +449,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.btn_start_location_updates)
     public void startLocationButtonClick() {
+
         // Requesting ACCESS_FINE_LOCATION using Dexter library
         Dexter.withActivity(getActivity())
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
