@@ -73,18 +73,16 @@
                 android:textSize="26dp" />
 
             <Button
-                android:id="@+id/btn_sign_out"
+                android:id="@+id/btn_check"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:textColor="@color/buttonText"
                 android:textSize="20sp"
-                android:layout_marginTop="150dp"
-                android:text="Sign out"
+                android:text="Check"
                 android:background="?android:selectableItemBackground" />
-
         </LinearLayout>
     </RelativeLayout>
-
 </FrameLayout>

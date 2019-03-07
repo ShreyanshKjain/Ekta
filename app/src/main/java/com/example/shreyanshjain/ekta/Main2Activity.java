@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.shreyanshjain.ekta.adapters.PagerViewAdapter;
 import com.example.shreyanshjain.ekta.service.OpenAppService;
 import com.example.shreyanshjain.ekta.service.RecorderService;
+import com.firebase.ui.auth.AuthUI;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,9 +78,9 @@ public class Main2Activity extends AppCompatActivity{
             }
         });
 
-        intent = new Intent(Main2Activity.this,RecorderService.class);
-        intent.putExtra(RecorderService.INTENT_VIDEO_PATH, "/video/camera/");//eg: "/video/camera/"
-        startService(intent);
+//        intent = new Intent(Main2Activity.this,RecorderService.class);
+//        intent.putExtra(RecorderService.INTENT_VIDEO_PATH, "/video/camera/");//eg: "/video/camera/"
+//        startService(intent);
     }
 
     @OnClick(R.id.main_page)
@@ -127,8 +128,25 @@ public class Main2Activity extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.set_guard:
                 Log.i("Set Guardians", "clicked");
+                startActivity(new Intent(Main2Activity.this,EmergencyContacts.class));
 //                return true;
                 break;
+
+            case R.id.nav_safety:
+                Log.i("Safety Tips","clicked");
+                startActivity(new Intent(Main2Activity.this,SafetyTipsActivity.class));
+                break;
+
+            case R.id.nav_help:
+                Log.i("Emergency Contacts","clicked");
+                startActivity(new Intent(Main2Activity.this,EmergencyActivity.class));
+                break;
+
+            case R.id.sign_out:
+                Log.i("Sign Out","clicked");
+                AuthUI.getInstance().signOut(getApplicationContext());
+                break;
+
             default:
                 Log.e("Default", "error");
 
@@ -143,7 +161,7 @@ public class Main2Activity extends AppCompatActivity{
         {
             unregisterReceiver(mReceiver);
             mReceiver = null;
-            stopService(intent);
+//            stopService(intent);
         }
         super.onDestroy();
     }

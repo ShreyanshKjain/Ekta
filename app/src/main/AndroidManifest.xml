@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -52,10 +56,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".service.RecorderService">
-
-        </service>
+        <service android:name=".service.RecorderService" />
         <!-- ./Firebase Notifications -->
 
 
@@ -71,6 +72,9 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".SafetyTipsActivity" />
+        <activity android:name=".EmergencyActivity" />
+        <activity android:name=".EmergencyContacts"></activity>
     </application>
 
 </manifest>

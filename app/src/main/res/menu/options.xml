@@ -2,6 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Set Guardians"
+        android:title="Emergency Contacts"
         android:id="@+id/set_guard"/>
+    <item
+        android:id="@+id/nav_safety"
+        android:title="Safety Tips" />
+    <item
+        android:id="@+id/nav_help"
+        android:title="Helpline numbers" />
+
+    <item
+        android:id="@+id/sign_out"
+        android:title="Sign Out"/>
+
 </menu>
