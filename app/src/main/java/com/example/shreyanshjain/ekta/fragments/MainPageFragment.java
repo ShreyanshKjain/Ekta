@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -17,7 +18,9 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +33,13 @@ import com.example.shreyanshjain.ekta.BuildConfig;
 import com.example.shreyanshjain.ekta.MainActivity;
 import com.example.shreyanshjain.ekta.R;
 import com.example.shreyanshjain.ekta.app.Config;
+import com.example.shreyanshjain.ekta.models.Contacts;
 import com.example.shreyanshjain.ekta.models.LocationInfo;
 import com.example.shreyanshjain.ekta.models.Users;
+import com.example.shreyanshjain.ekta.service.RecorderService;
 import com.example.shreyanshjain.ekta.utils.NotificationUtils;
+import com.example.shreyanshjain.ekta.utils.ObjectSerializer;
+import com.example.shreyanshjain.ekta.utils.SmsHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -65,14 +72,18 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.OnClick;
+
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class MainPageFragment extends android.support.v4.app.Fragment {
 
@@ -84,7 +95,9 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
     TextView txtLocationResult, txtUpdatedOn, txtMessage;
 
-    Button btnStartUpdates, btnStopUpdates, btnSignOut;
+    Button btnStartUpdates, btnStopUpdates,btnCheck;
+
+    SharedPreferences sharedPreferences;
 
     // location last updated time
     private String mLastUpdateTime,mLastUpdateDate;
@@ -99,7 +112,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
     private static final int REQUEST_CHECK_SETTINGS = 100;
     private static final int RC_SIGN_IN = 1;
-
+    private static final int SMS_PERMISSION_CODE = 0;
 
     // bunch of location related apis
     private FusedLocationProviderClient mFusedLocationClient;
@@ -137,7 +150,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
         btnStartUpdates = view.findViewById(R.id.btn_start_location_updates);
         btnStopUpdates = view.findViewById(R.id.btn_stop_location_updates);
-        btnSignOut = view.findViewById(R.id.btn_sign_out);
+        btnCheck = view.findViewById(R.id.btn_check);
 
         // initialize the necessary libraries
         init();
@@ -156,13 +169,13 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
+        btnCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signOut();
+                sendCheckSMS();
             }
         });
-        // restore the values from saved instance state
+//         restore the values from saved instance state
         restoreValuesFromBundle(savedInstanceState);
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -181,11 +194,24 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
                     String message = intent.getStringExtra("message");
 
-                    String lat = message.substring(11,21);
-                    String lng = message.substring(37);
+                    final String lat = message.substring(11,21);
+                    final String lng = message.substring(37);
                     Toast.makeText(getContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
 
                     txtMessage.setText("Lat:"+lat+ "\nLong:" + lng);
+
+                    txtMessage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Uri locationUri = Uri.parse("" +
+                                    ".google.navigation:q="+lat+","+lng);
+                            Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
+                            resultIntent.setPackage("com.google.android.apps.maps");
+//                            if (resultIntent.resolveActivity(getPackageManager()) != null) {
+                                startActivity(resultIntent);
+//                            }
+                        }
+                    });
                 }
             }
         };
@@ -214,6 +240,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
                 mLastUpdateDate = DateFormat.getDateInstance().format(new Date());
                 Toast.makeText(getContext(), "" + mCurrentLocation.getTime(), Toast.LENGTH_SHORT).show();
+
                 updateLocationUI();
             }
         };
@@ -229,6 +256,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
         builder.addLocationRequest(mLocationRequest);
         mLocationSettingsRequest = builder.build();
 
+        sharedPreferences = getActivity().getSharedPreferences("com.example.shreyanshjain.ekta",Context.MODE_PRIVATE);
     }
 
     /**
@@ -279,7 +307,8 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Toast.makeText(getContext(), "You are now signed in", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "You are now signed in", Toast.LENGTH_SHORT).show();
+                    Log.d("Firebase Auth","You are now signed in");
                 } else {
                     startActivityForResult(AuthUI.getInstance()
                             .createSignInIntentBuilder()
@@ -291,11 +320,10 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
         };
     }
 
-    @OnClick(R.id.btn_sign_out)
-    public void signOut()
-    {
-        AuthUI.getInstance().signOut(getActivity().getApplicationContext());
-    }
+//    public void signOut()
+//    {
+//        AuthUI.getInstance().signOut(getActivity().getApplicationContext());
+//    }
     // Code to sign out the user
 //        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
@@ -435,6 +463,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
     @OnClick(R.id.btn_start_location_updates)
     public void startLocationButtonClick() {
+
         // Requesting ACCESS_FINE_LOCATION using Dexter library
         Dexter.withActivity(getActivity())
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -516,11 +545,11 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
                     case Activity.RESULT_OK:
                         Log.e(TAG, "User agreed to make required location settings changes.");
                         // Nothing to do. startLocationupdates() gets called in onResume again.
-                        Toast.makeText(getContext(),"Signed IN",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(),"Signed IN",Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
                         Log.e(TAG, "Sign in Cancelled");
-                        Toast.makeText(getContext(),"Sign IN cancelled",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(),"Sign IN cancelled",Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                         break;
                 }
@@ -545,12 +574,12 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
 
         // Resuming location updates depending on button state and
         // allowed permissions
-        if (mRequestingLocationUpdates && checkPermissions()) {
+        if (mRequestingLocationUpdates && checkLocPermissions()) {
             startLocationUpdates();
         }
         mAuth.addAuthStateListener(mAuthStateListener);
 
-        // register GCM registration complete receiver
+        // register FCM registration complete receiver
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.REGISTRATION_COMPLETE));
 
@@ -577,9 +606,68 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
         detachDatabaseReadListener();
     }
 
-    private boolean checkPermissions() {
+    private boolean checkLocPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    //SMS Sending
+    private void requestReadAndSendSmsPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_SMS)) {
+            Log.d(TAG, "shouldShowRequestPermissionRationale(), no permission requested");
+            return;
+        }
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS},
+                SMS_PERMISSION_CODE);
+    }
+
+    private boolean hasReadSmsPermission() {
+        return ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean hasValidPreConditions(String phone) {
+        if (!hasReadSmsPermission()) {
+            requestReadAndSendSmsPermission();
+            return false;
+        }
+
+        if (!SmsHelper.isValidPhoneNumber(phone)) {
+            Log.e("SMS Error","Wrong Phone Number");
+            return false;
+        }
+        return true;
+    }
+
+    @OnClick(R.id.btn_check)
+    public void sendCheckSMS()
+    {
+        Log.i("Check SMS","clicked");
+        ArrayList<String > contacts = new ArrayList<>();
+
+        try {
+
+            contacts = (ArrayList<String>)ObjectSerializer.deserialize(sharedPreferences.getString("Contacts",ObjectSerializer.serialize(new ArrayList<Contacts>())));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(String con : contacts)
+        {
+
+            Log.d("Contact",con);
+            if(!hasValidPreConditions(con))
+                return;
+
+            String sms = "Hi " + ",\n Please keep checking on me after every 10 mins. Location : "
+                    + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude();
+            SmsHelper.sendDebugSms(con, sms);
+            Log.i("SMS Sending",sms);
+
+        }
     }
 }

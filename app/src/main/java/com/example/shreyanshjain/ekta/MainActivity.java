@@ -263,11 +263,11 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    @OnClick(R.id.btn_sign_out)
-    public void signOut()
-    {
-        AuthUI.getInstance().signOut(this);
-    }
+//    @OnClick(R.id.btn_sign_out)
+//    public void signOut()
+//    {
+//        AuthUI.getInstance().signOut(this);
+//    }
     // Code to sign out the user
 //        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
@@ -551,35 +551,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-
-
-        /*mDatabaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                LocationInfo location = dataSnapshot.getValue(LocationInfo.class);
-                Log.i("Latitude",""+location.getLatitude());
-                Log.i("Time",""+location.getTime());
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-*/

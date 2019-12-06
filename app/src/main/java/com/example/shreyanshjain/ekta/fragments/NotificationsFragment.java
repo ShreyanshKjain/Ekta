@@ -39,7 +39,6 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,35 +58,44 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
             TODO: Add onClickListener() for every notification that will intent to Google Maps with received latitude and longitude passed in it
          */
 
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-//        mDatabaseReference.child("Notification").child("flag").setValue("true");
-
-        mValueEventListener = new ValueEventListener() {
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-//                DataSnapshot dataSnapshot1 = dataSnapshot.child("Notification").child(mAuth.getCurrentUser().getUid());
+//                mAuth = firebaseAuth;
 //                notificationList.clear();
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                for (DataSnapshot data : children) {
-                    NotificationList notification = data.getValue(NotificationList.class);
-                    notificationList.add(notification);
+                if(firebaseAuth.getCurrentUser() != null)
+                {
+                    mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+                    mValueEventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                            for (DataSnapshot data : children) {
+                                NotificationList notification = data.getValue(NotificationList.class);
+                                notificationList.add(notification);
+                            }
+                            setAdapter(notificationList);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    };
+                    mDatabaseReference.child("Notification").child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
                 }
-                setAdapter(notificationList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                else
+                {
+                    recyclerView.setVisibility(View.GONE);
+                    noNotifications.setVisibility(View.VISIBLE);
+                }
             }
         };
-        mDatabaseReference.child("Notification").child(mAuth.getCurrentUser().getUid()).addValueEventListener(mValueEventListener);
-//    }
-//                else
-//    {
-//        recyclerView.setVisibility(View.GONE);
-//        noNotifications.setVisibility(View.VISIBLE);
-//    }
+
+        mAuth.addAuthStateListener(mAuthStateListener);
+
         return view;
     }
 

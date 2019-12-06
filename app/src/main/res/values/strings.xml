@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">Location</string>
+    <string name="app_name">Safety App</string>
     <string name="default_notification_channel_id">Location_CH01</string>
 
+    <string name="cpr">CPR</string>
+    <string name="drowning">Drowning in Sea</string>
+    <string name="building">Fire in Building</string>
+    <string name="earthquake">Earthquake</string>
 </resources>
