@@ -9,6 +9,7 @@ import android.view.View;
 import com.example.shreyanshjain.ekta.Main2Activity;
 
 import static android.view.KeyEvent.KEYCODE_BACK;
+import static android.view.KeyEvent.KEYCODE_POWER;
 
 public class OpenAppService extends IntentService implements View.OnKeyListener {
     /**
@@ -31,7 +32,7 @@ public class OpenAppService extends IntentService implements View.OnKeyListener 
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if(keyCode == KEYCODE_BACK)
+        if(keyCode == KEYCODE_POWER)
         {
             count++;
             if(count == 3)

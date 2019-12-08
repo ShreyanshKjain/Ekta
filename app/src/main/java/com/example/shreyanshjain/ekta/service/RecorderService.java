@@ -148,7 +148,6 @@ public class RecorderService extends Service implements SurfaceHolder.Callback {
 
                     @Override
                     public void onInfo(MediaRecorder mr, int what, int extra) {
-                        // TODO Auto-generated method stub
 
                     }
                 });
@@ -157,7 +156,6 @@ public class RecorderService extends Service implements SurfaceHolder.Callback {
 
                     @Override
                     public void onError(MediaRecorder mr, int what, int extra) {
-                        // TODO Auto-generated method stub
 
                         mMediaRecorder.reset();
                         mMediaRecorder.release();

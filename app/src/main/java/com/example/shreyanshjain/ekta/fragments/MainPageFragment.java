@@ -203,8 +203,11 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
                     txtMessage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+//                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+//                                    Uri.parse("http://maps.google.com/maps?saddr="+mCurrentLocation.getLatitude()+","+mCurrentLocation.getLongitude()+"&daddr="+lat+","+lng ));
+//                            startActivity(intent);
                             Uri locationUri = Uri.parse("" +
-                                    ".google.navigation:q="+lat+","+lng);
+                                    "google.navigation:q="+lat+","+lng);
                             Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
                             resultIntent.setPackage("com.google.android.apps.maps");
 //                            if (resultIntent.resolveActivity(getPackageManager()) != null) {
@@ -478,7 +481,7 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
                     public void onPermissionDenied(PermissionDeniedResponse response) {
                         if (response.isPermanentlyDenied()) {
                             // open device settings when the permission is
-                            // denied permanently
+                            // denied permanentlystop
                             openSettings();
                         }
                     }
@@ -575,7 +578,8 @@ public class MainPageFragment extends android.support.v4.app.Fragment {
         // Resuming location updates depending on button state and
         // allowed permissions
         if (mRequestingLocationUpdates && checkLocPermissions()) {
-            startLocationUpdates();
+//            startLocationUpdates();
+            startLocationButtonClick();
         }
         mAuth.addAuthStateListener(mAuthStateListener);
 

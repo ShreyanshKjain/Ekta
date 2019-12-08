@@ -1,7 +1,10 @@
 package com.example.shreyanshjain.ekta.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +43,6 @@ public class NotificationAdapter extends RecyclerView.Adapter {
         ((ViewHolder)holder).heading.setText(notificationList.get(position).getFrom());
         ((ViewHolder)holder).sub_heading.setText("Latitude: " + notificationList.get(position).getLocation().getLatitude() +
                                                     "\nLongitude: " + notificationList.get(position).getLocation().getLongitude());
-
         /*
             TODO: Correct the time displayed in the notifications
          */
@@ -49,6 +51,20 @@ public class NotificationAdapter extends RecyclerView.Adapter {
         formatter.setTimeZone(TimeZone.getTimeZone("IST"));
         String dateFormatted = formatter.format(date);
         ((ViewHolder)holder).date_time.setText(dateFormatted);
+
+        final double lat = notificationList.get(position).getLocation().getLatitude();
+        final double lng = notificationList.get(position).getLocation().getLongitude();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri locationUri = Uri.parse("" +
+                        "google.navigation:q="+lat+","+lng);
+                Intent resultIntent = new Intent(Intent.ACTION_VIEW,locationUri);
+                resultIntent.setPackage("com.google.android.apps.maps");
+//                            if (resultIntent.resolveActivity(getPackageManager()) != null) {
+                context.startActivity(resultIntent);
+            }
+        });
 
     }
 

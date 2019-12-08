@@ -52,10 +52,8 @@ public class NotificationsFragment extends android.support.v4.app.Fragment {
 
         notificationList = new ArrayList<>();
         /*
-            TODO: Display notification content
             TODO: Change the notification content when the user is changed
             TODO: Save the notification in SQLite database for offline access
-            TODO: Add onClickListener() for every notification that will intent to Google Maps with received latitude and longitude passed in it
          */
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shreyanshjain.ekta.adapters.PagerViewAdapter;
 import com.example.shreyanshjain.ekta.service.OpenAppService;
@@ -38,7 +39,7 @@ public class Main2Activity extends AppCompatActivity{
 
     private PagerViewAdapter pagerViewAdapter;
     BroadcastReceiver mReceiver;
-    Intent intent;
+    static int back_key_count=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class Main2Activity extends AppCompatActivity{
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
 
-//        startService(new Intent(this, OpenAppService.class));
+        startService(new Intent(this, OpenAppService.class));
         pagerViewAdapter = new PagerViewAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(pagerViewAdapter);
@@ -164,5 +165,19 @@ public class Main2Activity extends AppCompatActivity{
 //            stopService(intent);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+
+        if (back_key_count == 0) {
+            Toast.makeText(getApplicationContext(),"Press again to exit the app",Toast.LENGTH_SHORT).show();
+            back_key_count++;
+        }
+        else if (back_key_count == 1) {
+            back_key_count = 0;
+            finish();
+        }
     }
 }
